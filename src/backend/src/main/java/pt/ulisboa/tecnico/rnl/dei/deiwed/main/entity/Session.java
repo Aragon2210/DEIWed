@@ -5,11 +5,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.ManyToMany;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import pt.ulisboa.tecnico.rnl.dei.deiwed.exceptions.DeiwedException;
+import pt.ulisboa.tecnico.rnl.dei.deiwed.exceptions.ErrorMessage;
 
 import pt.ulisboa.tecnico.rnl.dei.deiwed.main.dto.SessionDto;
+
+import pt.ulisboa.tecnico.rnl.dei.deiwed.main.entity.Attendee;
 
 @Entity
 @Table(name = "session")
@@ -28,16 +36,23 @@ public class Session {
     @Column(name = "theme", nullable = false)
 	private String theme;
 
-    /* @Column(name = "posterId", nullable = true)
-	private Long posterId; */
+    /* @Column(name = "poster", nullable = true)
+	private guardar imagem aqui */
 
     //lunch_dishes 
-    //participants
+
+    @ManyToMany(mappedBy = "sessions")
+    private List<Attendee> attendees = new ArrayList<>();
 
 	protected Session() {
 	}
 
 	public Session(LocalDateTime date, String speaker, String theme) {
+		
+		if(date.getDayOfWeek().getValue() != 3){
+			new DeiwedException(ErrorMessage.SESSION_DATE_NOT_WEDNESDAY);
+		}
+
 		this.date = date;
         this.speaker = speaker;
         this.theme = theme;
@@ -47,6 +62,11 @@ public class Session {
 		this(sessionDto.getDate(), sessionDto.getSpeaker(), 
             sessionDto.getTheme());
 	}
+
+    public void remove() {
+        this.attendees.forEach(att -> att.removeSession(this));
+        this.attendees.clear();
+    }
 
 	public Long getId() {
 		return this.id;
@@ -79,6 +99,18 @@ public class Session {
 	public void setTheme(String theme) {
 		this.theme = theme;
 	}
+
+    public List<Attendee> getAttendees() {
+        return this.attendees;
+    }
+
+    public void addAttendee(Attendee attendee) {
+        attendees.add(attendee);
+    }
+
+    public void removeAttendee(Attendee attendee) {
+        attendees.remove(attendee);
+    }
 
 	
 	@Override

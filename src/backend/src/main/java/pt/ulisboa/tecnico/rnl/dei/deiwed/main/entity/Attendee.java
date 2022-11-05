@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.ManyToMany;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import pt.ulisboa.tecnico.rnl.dei.deiwed.main.dto.AttendeeDto;
 
@@ -31,12 +35,15 @@ public class Attendee {
 
 	// TODO: maybe add more fields? ...or maybe not? what makes sense here?
 
+	@ManyToMany
+    private List<Session> sessions = new ArrayList<>();
+
 	protected Attendee() {
 	}
 
 	public Attendee(String name, String istId, ATTENDEE_TYPE type) {
-		this.name = name;
-		this.istId = istId;
+		this.name = name;//verify
+		this.istId = istId;//verify
 		this.type = type;
 	}
 
@@ -44,6 +51,11 @@ public class Attendee {
 		this(attendeeDto.getName(), attendeeDto.getIstId(),
 				ATTENDEE_TYPE.valueOf(attendeeDto.getType().toUpperCase()));
 	}
+
+	public void remove() {
+        this.sessions.forEach(session -> session.removeAttendee(this));
+        this.sessions.clear();
+    }
 
 	public Long getId() {
 		return this.id;
@@ -76,6 +88,20 @@ public class Attendee {
 	public void setType(ATTENDEE_TYPE type) {
 		this.type = type;
 	}
+
+	public List<Session> getSessions() {
+        return this.sessions;
+    }
+
+    public void addSession(Session session) {
+        sessions.add(session);
+		session.addAttendee(this);
+    }
+
+    public void removeSession(Session session) {
+        sessions.remove(session);
+		session.removeAttendee(this);
+    }
 
 	@Override
 	public String toString() {

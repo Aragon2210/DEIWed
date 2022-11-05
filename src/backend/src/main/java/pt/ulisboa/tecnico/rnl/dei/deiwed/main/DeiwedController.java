@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import pt.ulisboa.tecnico.rnl.dei.deiwed.main.dto.SessionDto;
 import pt.ulisboa.tecnico.rnl.dei.deiwed.main.dto.AttendeeDto;
 import pt.ulisboa.tecnico.rnl.dei.deiwed.main.service.AttendeeService;
 
@@ -32,6 +33,21 @@ public class DeiwedController {
 	@GetMapping("/attendees/{id}")
 	public AttendeeDto getAttendee(@PathVariable long id) {
 		return attendeeService.getAttendee(id);
+	}
+
+	@GetMapping("/attendees/{id}/sessions")
+	public List<SessionDto> getAttendeeSessions(@PathVariable long id) {
+		return attendeeService.getAttendeeSessions(id);
+	}
+
+	@PutMapping("/attendees/{attendeeId}/addSession/{sessionId}")
+	public void addAttendeeToSession(@PathVariable long attendeeId, @PathVariable long sessionId) {
+		attendeeService.addAttendeeToSession(attendeeId, sessionId);
+	}
+
+	@PutMapping("/attendees/{attendeeId}/removeSession/{sessionId}")
+	public void removeAttendeeFromSession(@PathVariable long attendeeId, @PathVariable long sessionId) {
+		attendeeService.removeAttendeeFromSession(attendeeId, sessionId);
 	}
 
 	@PutMapping("/attendees/{id}")

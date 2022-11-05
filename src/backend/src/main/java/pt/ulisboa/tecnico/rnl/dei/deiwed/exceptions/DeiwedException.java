@@ -22,6 +22,12 @@ public class DeiwedException extends RuntimeException {
 		this.errorMessage = errorMessage;
 	}
 
+	public DeiwedException(ErrorMessage errorMessage, String value1, String value2) {
+		super(String.format(errorMessage.getLabel(), value1, value2));
+		logger.error(errorMessage.getLabel(), value1, value2);
+		this.errorMessage = errorMessage;
+	}
+
 	public ErrorMessage getErrorMessage() {
 		return this.errorMessage;
 	}

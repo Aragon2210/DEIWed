@@ -40,6 +40,8 @@ public class SessionService {
 		return new SessionDto(fetchSessionOrThrow(id));
 	}
 
+	//TODO: get session poster
+
 	public SessionDto createSession(SessionDto sessionDto) {
 		return updateOrCreateSession(null, sessionDto);
 	}
@@ -51,7 +53,9 @@ public class SessionService {
 	}
 
 	public void deleteSession(long id) {
-		fetchSessionOrThrow(id); // ensure exists
+		Session session = fetchSessionOrThrow(id); // ensure exists
+		
+		session.remove();
 
 		sessionRepository.deleteById(id);
 	}
