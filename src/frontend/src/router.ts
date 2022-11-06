@@ -17,6 +17,11 @@ const router = new Router({
       name: 'attendees',
       component: () => import('@/views/deiwed/AttendeesView.vue'),
     },
+    {
+      path: '/sessions',
+      name: 'sessions',
+      component: () => import('@/views/deiwed/SessionsView.vue'),
+    },
   ],
 });
 

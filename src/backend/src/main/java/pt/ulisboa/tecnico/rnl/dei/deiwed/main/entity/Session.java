@@ -59,7 +59,7 @@ public class Session {
 	}
 
 	public Session(SessionDto sessionDto) {
-		this(sessionDto.getDate(), sessionDto.getSpeaker(), 
+		this(LocalDateTime.parse(sessionDto.getDate(), DateTimeFormatter.ISO_DATE_TIME), sessionDto.getSpeaker(), 
             sessionDto.getTheme());
 	}
 

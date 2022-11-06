@@ -9,7 +9,7 @@ import pt.ulisboa.tecnico.rnl.dei.deiwed.main.entity.Session;
 // Data Transfer Object, to communicate with frontend
 public class SessionDto implements Serializable {
 	private long id;
-	private LocalDateTime date;
+	private String date;
 	private String speaker;
 	private String theme;
 
@@ -18,7 +18,7 @@ public class SessionDto implements Serializable {
 
 	public SessionDto(long id, LocalDateTime date, String speaker, String theme) {
 		this.id = id;
-		this.date = date;
+		this.date = date.format(DateTimeFormatter.ISO_DATE_TIME);
 		this.speaker = speaker;
 		this.theme = theme;
 	}
@@ -36,11 +36,11 @@ public class SessionDto implements Serializable {
 		this.id = id;
 	}
 
-    public LocalDateTime getDate(){
+    public String getDate(){
         return this.date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -64,6 +64,6 @@ public class SessionDto implements Serializable {
 	public String toString() {
 		return String.format(
 				"SessionDto[id=%d, theme='%s', speaker='%s', date='%s']",
-				id, theme, speaker, date.format(DateTimeFormatter.ISO_DATE_TIME));
+				id, theme, speaker, date);
 	}
 }
