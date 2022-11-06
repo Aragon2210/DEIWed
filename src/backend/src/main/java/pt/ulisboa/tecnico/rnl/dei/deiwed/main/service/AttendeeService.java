@@ -60,7 +60,17 @@ public class AttendeeService {
 			.collect(Collectors.toList());
 	}
 
-	//VOID FOR NOW
+	public List<SessionDto> getNotAttendeeSessions(long id) {
+		Attendee attendee = fetchAttendeeOrThrow(id);
+
+		List<Session> result = sessionRepository.findAll().stream()
+    		.filter(s -> !attendee.getSessions().contains(s)).collect(Collectors.toList());
+
+		return result.stream()
+			.map(SessionDto::new)
+			.collect(Collectors.toList());
+	}
+
 	public void addAttendeeToSession(long attendeeId, long sessionId) {
 		Session session = fetchSessionOrThrow(sessionId);
 		Attendee attendee = fetchAttendeeOrThrow(attendeeId);
@@ -72,7 +82,6 @@ public class AttendeeService {
 		attendee.addSession(session);
 	}
 
-	//VOID FOR NOW
 	public void removeAttendeeFromSession(long attendeeId, long sessionId) {
 		Session session = fetchSessionOrThrow(sessionId);
 		Attendee attendee = fetchAttendeeOrThrow(attendeeId);

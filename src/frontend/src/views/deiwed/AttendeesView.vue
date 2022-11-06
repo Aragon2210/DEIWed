@@ -145,6 +145,7 @@
     <show-attendee-sessions-dialog
       :dialog="sessionsDialog"
       :sessions="attendeeSessions"
+      :attendeeId="attendeeIdSessions"
       v-on:close="closeSessionsDialog"
     ></show-attendee-sessions-dialog>
 
@@ -179,6 +180,7 @@ export default class AttendeesView extends Vue {
   newOrUpdatedAttendee: AttendeeDto = new AttendeeDto();
 
   attendeeSessions: SessionDto[] = [];
+  attendeeIdSessions: number = 0;
   sessionsDialog: boolean = false;
 
   async mounted() {
@@ -193,7 +195,7 @@ export default class AttendeesView extends Vue {
   }
 
   getTitle() {
-    return this.updateAttendee ? 'Edit Attendee' : 'New Attendee';
+    return this.updateAttendee ? 'Editar Participante' : 'Adicionar Participante';
   }
 
   closeDialogue() {
@@ -237,6 +239,7 @@ export default class AttendeesView extends Vue {
   async showSessions(attendee: AttendeeDto) {
     this.sessionsDialog = true;
     try {
+      this.attendeeIdSessions = attendee.id;
       this.attendeeSessions = await RemoteServices.getAttendeeSessions(attendee.id);
     } catch (error) {
       await this.$store.dispatch('error', error);
@@ -248,7 +251,7 @@ export default class AttendeesView extends Vue {
   ) {
     if (
       toDeleteAttendee.id &&
-        confirm('Are you sure you want to delete this failed answer?')
+        confirm('Têm a certeza que deseja remver esta participante?')
     ) {
       try {
         await RemoteServices.deleteAttendee(

@@ -40,6 +40,11 @@ public class DeiwedController {
 		return attendeeService.getAttendeeSessions(id);
 	}
 
+	@GetMapping("/attendees/{id}/not/sessions")
+	public List<SessionDto> getNotAttendeeSessions(@PathVariable long id) {
+		return attendeeService.getNotAttendeeSessions(id);
+	}
+
 	@PutMapping("/attendees/{attendeeId}/addSession/{sessionId}")
 	public void addAttendeeToSession(@PathVariable long attendeeId, @PathVariable long sessionId) {
 		attendeeService.addAttendeeToSession(attendeeId, sessionId);

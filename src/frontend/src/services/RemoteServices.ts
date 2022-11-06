@@ -1,4 +1,6 @@
 import AttendeeDto from '@/models/deiwed/AttendeeDto';
+import DishDto from '@/models/deiwed/DishDto';
+import OrderDto from '@/models/deiwed/OrderDto';
 import SessionDto from '@/models/deiwed/SessionDto';
 import DeiwedError from '@/models/error/DeiwedError';
 import axios from 'axios';
@@ -7,6 +9,7 @@ const httpClient = axios.create();
 httpClient.defaults.timeout = 50000;
 httpClient.defaults.baseURL = process.env.VUE_APP_ROOT_API;
 httpClient.defaults.headers.post['Content-Type'] = 'application/json';
+httpClient.defaults.headers.common['Authorization'] = 'ist195606';
 
 export default class RemoteServices {
   
@@ -48,9 +51,21 @@ export default class RemoteServices {
       });
   }
 
-  static async getAttendeeSessions(sessionId:number): Promise<SessionDto[]> {
+  static async getAttendeeSessions(attendeeId:number): Promise<SessionDto[]> {
     return httpClient
-      .get(`/attendees/${sessionId}/sessions`)
+      .get(`/attendees/${attendeeId}/sessions`)
+      .then((response) => response.data)
+      .catch(async (error) => {
+        throw new DeiwedError(
+          await this.errorMessage(error),
+          error.response.data.code
+        );
+      });
+  }
+
+  static async getNotAttendeeSessions(attendeeId:number): Promise<SessionDto[]> {
+    return httpClient
+      .get(`/attendees/${attendeeId}/not/sessions`)
       .then((response) => response.data)
       .catch(async (error) => {
         throw new DeiwedError(
@@ -166,6 +181,33 @@ export default class RemoteServices {
         });
   }
 
+  //=============================Dishes/Orders==========================
+
+  static async createOrder(order: OrderDto, date: string): Promise<OrderDto> {
+    return httpClient
+        .post(`https://eindhoven.rnl.tecnico.ulisboa.pt/food-store/docs/#post-/orders/${date}`, order)
+        .then((response) => response.data)
+        .catch(async (error) => {
+          throw new DeiwedError(
+            await this.errorMessage(error),
+            error.response.data.code
+          );
+        });
+  }
+
+  static async getDishes(): Promise<DishDto[]> {
+    return httpClient
+      .get('https://eindhoven.rnl.tecnico.ulisboa.pt/food-store/docs/#get-/dishes')
+      .then((response) => response.data)
+      .catch(async (error) => {
+        throw new DeiwedError(
+          await this.errorMessage(error),
+          error.response.data.code
+        );
+      });
+  }
+
+  
   static async errorMessage(error: any): Promise<string> {
     if (error.message === 'Network Error') {
       return 'Unable to connect to server';

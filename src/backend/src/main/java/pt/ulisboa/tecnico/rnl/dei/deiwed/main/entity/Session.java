@@ -48,11 +48,6 @@ public class Session {
 	}
 
 	public Session(LocalDateTime date, String speaker, String theme) {
-		
-		if(date.getDayOfWeek().getValue() != 3){
-			new DeiwedException(ErrorMessage.SESSION_DATE_NOT_WEDNESDAY);
-		}
-
 		this.date = date;
         this.speaker = speaker;
         this.theme = theme;
